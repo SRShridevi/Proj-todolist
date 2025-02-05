@@ -64,14 +64,6 @@ def createtoken(username: str, user_id: int):
     encoded_jwt = jwt.encode(encode,SEC_KEY,algorithm=ALGO)
     return encoded_jwt
 
-
-def protected_route(token: str = Depends(oauth2bearer), db: Session = Depends(get_db)):
-    username, user_id=decodetoken(token)
-    user = db.query(Users).filter(Users.id==user_id).first()
-    if not user:
-        raise HTTPException(status_code=401,detail="User not found")
-    return {"message": f"Welcome {username}!"}
-
 def decodetoken(token: str):
     try:
         payloaddetails= jwt.decode(token, SEC_KEY, algorithms=[ALGO])
